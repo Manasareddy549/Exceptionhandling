@@ -1,4 +1,4 @@
-package com.cap.anurag.entity;
+package com.cap.anurag.exceptions;
 
 public class ErrorInfo {
 private String url;

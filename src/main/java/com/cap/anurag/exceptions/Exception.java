@@ -1,4 +1,4 @@
-package com.cap.anurag.controller;
+package com.cap.anurag.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,16 +8,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.cap.anurag.entity.ErrorInfo;
-
 @ControllerAdvice
 public class Exception extends Throwable {
+	public Exception(String message) {
+	}
+
+	public Exception() {
+	}
+
 	@ResponseBody
 	@ResponseStatus(value=HttpStatus.NOT_FOUND)
 	@ExceptionHandler(value={Exception.class })
 	protected ErrorInfo handleConflict(Exception ex, HttpServletRequest req)
 	{
-		String bodyOfResponse=ex.getMessage();
+		String bodyOfResponse=ex.getMessage();//employee with this id is not present
 		String url=req.getRequestURL().toString();
 		return new ErrorInfo(url,bodyOfResponse);
 	}

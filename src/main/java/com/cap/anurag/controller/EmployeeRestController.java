@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cap.anurag.entity.Employee;
+import com.cap.anurag.exceptions.EmployeeNotFoundException;
 import com.cap.anurag.service.EmployeeService;
 
 
@@ -27,7 +28,7 @@ import com.cap.anurag.service.EmployeeService;
 @RequestMapping("/bank")
 @CrossOrigin("http://localhost:4200")
 public class EmployeeRestController {
-
+	//controller level exception handling
 	@ResponseStatus(value=HttpStatus.NOT_FOUND,reason="controller employeeid is not present")
 	@ExceptionHandler({Exception.class})
 	public void handleException()
@@ -41,9 +42,10 @@ public class EmployeeRestController {
 	
 	// creating account
 	@PostMapping("/CreateAccount")
-	public String createAccount(@RequestBody Employee emp)
+	public String createAccount(@RequestBody Employee emp) throws EmployeeNotFoundException
 	{
 		Employee employee=empService.createEmployee(emp);
+		try{
 		if(employee==null)
 		{
 			return "Insertion Failed!!!!!";
@@ -52,6 +54,13 @@ public class EmployeeRestController {
 		{
 			return "Inserted the record Successfully!!!!!!";
 		}
+		}
+		catch(Exception e)
+		{
+
+			throw new 	EmployeeNotFoundException("employee cannot be created ");
+		
+		}
 		
 	}
 	
@@ -59,7 +68,7 @@ public class EmployeeRestController {
 	
 	//list all employees
 	@GetMapping("/ListAllEmployees")
-	public List<Employee> findAllEmployees()
+	public List<Employee> findAllEmployees() throws EmployeeNotFoundException
 	{
 		return empService.findAllEmployees();
 	}
@@ -82,10 +91,15 @@ public class EmployeeRestController {
 	
 	//find employee by id
 	@GetMapping("/findById/{empId}")
-	public Optional<Employee> findEmployeeById(@PathVariable Integer empId)
+	public Optional<Employee> findEmployeeById(@PathVariable Integer empId) throws EmployeeNotFoundException
 	{
+		try{
 		return empService.findEmployeeById(empId);
-		
+	}
+	catch(Exception e)
+	{
+		throw new 	EmployeeNotFoundException("No employee found with this id");
+	}
 	}
 	
 	//delete employee by id
